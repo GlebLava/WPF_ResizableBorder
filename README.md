@@ -22,9 +22,7 @@ Add the namespace to use the component to the window:
 ```
 Now the component is usable:
 ```
-<component:ResizableBorder 	VerticalAlignment="Center"
-				HorizontalAlignment="Center"
-				BorderBrush="Black"
+<component:ResizableBorder 	BorderBrush="Black"
 				BorderThickness="2"
 				CornerRadius="2"
 				MinHeight="100" MinWidth="100">
