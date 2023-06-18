@@ -1,7 +1,7 @@
 # WPF_ResizableBorder
 
 ## What it is
-A resizable border by mouse for wpf. 
+A border that is resizable by mouse for wpf. 
 
 ## How to use
 Add the files [ResizableBorder.cs](https://github.com/GlebLava/WPF_ResizableBorder/blob/main/ResizableBorder/ResizableBorder.cs) and [ResizableBorderStyle.xaml](https://github.com/GlebLava/WPF_ResizableBorder/blob/main/ResizableBorder/ResizableBorderStyle.xaml) to your project (typically inside a components folder).
