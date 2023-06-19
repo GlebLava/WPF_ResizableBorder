@@ -22,6 +22,38 @@ public class ResizableBorder : UserControl // For direct content this needs to d
         set { SetValue(GrabPaddingProperty, value); }
     }
 
+    public static readonly DependencyProperty ResizableTopProperty =
+    DependencyProperty.Register(nameof(ResizableTop), typeof(bool), typeof(ResizableBorder), new PropertyMetadata(true));
+    public bool ResizableTop
+    {
+        get { return (bool)GetValue(ResizableTopProperty); }
+        set { SetValue(ResizableTopProperty, value); }
+    }
+
+    public static readonly DependencyProperty ResizableRightProperty =
+    DependencyProperty.Register(nameof(ResizableRight), typeof(bool), typeof(ResizableBorder), new PropertyMetadata(true));
+    public bool ResizableRight
+    {
+        get { return (bool)GetValue(ResizableRightProperty); }
+        set { SetValue(ResizableRightProperty, value); }
+    }
+
+    public static readonly DependencyProperty ResizableBotProperty =
+    DependencyProperty.Register(nameof(ResizableBot), typeof(bool), typeof(ResizableBorder), new PropertyMetadata(true));
+    public bool ResizableBot
+    {
+        get { return (bool)GetValue(ResizableBotProperty); }
+        set { SetValue(ResizableBotProperty, value); }
+    }
+
+    public static readonly DependencyProperty ResizableLeftProperty =
+    DependencyProperty.Register(nameof(ResizableLeft), typeof(bool), typeof(ResizableBorder), new PropertyMetadata(true));
+    public bool ResizableLeft
+    {
+        get { return (bool)GetValue(ResizableLeftProperty); }
+        set { SetValue(ResizableLeftProperty, value); }
+    }
+
     private Border? border;
     private Point mouseStartDragPos;
 
@@ -90,22 +122,22 @@ public class ResizableBorder : UserControl // For direct content this needs to d
 
         Point mousePosRelativeToBorder = Mouse.GetPosition(this);
 
-        if (InRangePadding(GrabPadding, mousePosRelativeToBorder.X, 0) && InRange(0, border!.ActualHeight, mousePosRelativeToBorder.Y))
+        if (ResizableLeft && InRangePadding(GrabPadding, 0, mousePosRelativeToBorder.X) && InRange(0 - GrabPadding, border!.ActualHeight + GrabPadding, mousePosRelativeToBorder.Y))
         {
             onBorderLeft = true;
         }
 
-        if (InRangePadding(GrabPadding, mousePosRelativeToBorder.Y, 0) && InRange(0, border!.ActualWidth, mousePosRelativeToBorder.X))
+        if (ResizableTop && InRangePadding(GrabPadding, 0, mousePosRelativeToBorder.Y) && InRange(0 - GrabPadding, border!.ActualWidth + GrabPadding, mousePosRelativeToBorder.X))
         {
             onBorderTop = true;
         }
 
-        if (InRangePadding(GrabPadding, mousePosRelativeToBorder.X, border!.ActualWidth) && InRange(0, border!.ActualHeight, mousePosRelativeToBorder.Y))
+        if (ResizableRight && InRangePadding(GrabPadding, border!.ActualWidth, mousePosRelativeToBorder.X) && InRange(0 - GrabPadding, border!.ActualHeight + GrabPadding, mousePosRelativeToBorder.Y))
         {
             onBorderRight = true;
         }
 
-        if (InRangePadding(GrabPadding, mousePosRelativeToBorder.Y, border!.ActualHeight) && InRange(0, border!.ActualWidth, mousePosRelativeToBorder.X))
+        if (ResizableBot && InRangePadding(GrabPadding, border!.ActualHeight, mousePosRelativeToBorder.Y) && InRange(0 - GrabPadding, border!.ActualWidth + GrabPadding, mousePosRelativeToBorder.X))
         {
             onBorderBot = true;
         }
@@ -200,3 +232,4 @@ public class ResizableBorder : UserControl // For direct content this needs to d
         this.Margin = margin;
     }
 }
+
