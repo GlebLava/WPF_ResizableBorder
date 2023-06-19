@@ -54,7 +54,6 @@ public class ResizableBorder : UserControl // For direct content this needs to d
         set { SetValue(ResizableLeftProperty, value); }
     }
 
-    private Border? border;
     private Point mouseStartDragPos;
 
     private bool isStretchingLeft = false;
@@ -77,22 +76,32 @@ public class ResizableBorder : UserControl // For direct content this needs to d
     {
         base.OnApplyTemplate();
 
-        if (this.GetTemplateChild("PART_Border") is Border border)
-        {
-            this.border = border;
-        }
-
         Window.GetWindow(this).MouseLeftButtonDown += OnMouseLeftButtonDownParentWindow;
         Window.GetWindow(this).MouseLeftButtonUp += OnMouseLeftButtonUpParentWindow;
         Window.GetWindow(this).MouseMove += OnMouseMoveParentWindow;
+
+        this.LayoutUpdated += ResizableBorder_LayoutUpdated;
+    }
+
+    private void ResizableBorder_LayoutUpdated(object? sender, System.EventArgs e)
+    {
+
     }
 
     protected void OnMouseLeftButtonDownParentWindow(object o, MouseButtonEventArgs e)
     {
-
-        //Check if mouse is on bordeŕ
         mouseStartDragPos = Mouse.GetPosition(Window.GetWindow(this));
+        SetStretching();
+    }
 
+    protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+    {
+        base.OnMouseLeftButtonDown(e);
+        SetStretching();
+    }
+
+    protected void SetStretching()
+    {
         if (onBorderLeft) isStretchingLeft = true;
         if (onBorderTop) isStretchingTop = true;
         if (onBorderRight) isStretchingRight = true;
@@ -122,22 +131,22 @@ public class ResizableBorder : UserControl // For direct content this needs to d
 
         Point mousePosRelativeToBorder = Mouse.GetPosition(this);
 
-        if (ResizableLeft && InRangePadding(GrabPadding, 0, mousePosRelativeToBorder.X) && InRange(0 - GrabPadding, border!.ActualHeight + GrabPadding, mousePosRelativeToBorder.Y))
+        if (ResizableLeft && InRangePadding(GrabPadding, 0, mousePosRelativeToBorder.X) && InRange(0 - GrabPadding, ActualHeight + GrabPadding, mousePosRelativeToBorder.Y))
         {
             onBorderLeft = true;
         }
 
-        if (ResizableTop && InRangePadding(GrabPadding, 0, mousePosRelativeToBorder.Y) && InRange(0 - GrabPadding, border!.ActualWidth + GrabPadding, mousePosRelativeToBorder.X))
+        if (ResizableTop && InRangePadding(GrabPadding, 0, mousePosRelativeToBorder.Y) && InRange(0 - GrabPadding, ActualWidth + GrabPadding, mousePosRelativeToBorder.X))
         {
             onBorderTop = true;
         }
 
-        if (ResizableRight && InRangePadding(GrabPadding, border!.ActualWidth, mousePosRelativeToBorder.X) && InRange(0 - GrabPadding, border!.ActualHeight + GrabPadding, mousePosRelativeToBorder.Y))
+        if (ResizableRight && InRangePadding(GrabPadding, ActualWidth, mousePosRelativeToBorder.X) && InRange(0 - GrabPadding, ActualHeight + GrabPadding, mousePosRelativeToBorder.Y))
         {
             onBorderRight = true;
         }
 
-        if (ResizableBot && InRangePadding(GrabPadding, border!.ActualHeight, mousePosRelativeToBorder.Y) && InRange(0 - GrabPadding, border!.ActualWidth + GrabPadding, mousePosRelativeToBorder.X))
+        if (ResizableBot && InRangePadding(GrabPadding, ActualHeight, mousePosRelativeToBorder.Y) && InRange(0 - GrabPadding, ActualWidth + GrabPadding, mousePosRelativeToBorder.X))
         {
             onBorderBot = true;
         }
@@ -151,40 +160,40 @@ public class ResizableBorder : UserControl // For direct content this needs to d
 
         if (isStretchingLeft)
         {
-            double newWidth = border!.ActualWidth - difference.X;
-            if (!(newWidth < border.MinWidth))
+            double newWidth = ActualWidth - difference.X;
+            if (IsInConstrains(newWidth, ActualHeight))
             {
-                border.Width = newWidth;
+                Width = newWidth;
                 AddToMargin(difference.X, 0, 0, 0);
             }
         }
 
         if (isStretchingTop)
         {
-            double newHeight = border!.ActualHeight - difference.Y;
-            if (!(newHeight < border.MinHeight))
+            double newHeight = ActualHeight - difference.Y;
+            if (IsInConstrains(ActualWidth, newHeight))
             {
-                border.Height = newHeight;
+                Height = newHeight;
                 AddToMargin(0, difference.Y, 0, 0);
             }
         }
 
         if (isStretchingRight)
         {
-            double newWidth = border!.ActualWidth + difference.X;
-            if (!(newWidth < border.MinWidth))
+            double newWidth = ActualWidth + difference.X;
+            if (IsInConstrains(newWidth, ActualHeight))
             {
-                border.Width = newWidth;
+                Width = newWidth;
                 AddToMargin(0, 0, -difference.X, 0);
             }
         }
 
         if (isStretchingBot)
         {
-            double newHeight = border!.ActualHeight + difference.Y;
-            if (!(newHeight < border.MinHeight))
+            double newHeight = ActualHeight + difference.Y;
+            if (IsInConstrains(ActualWidth, newHeight))
             {
-                border.Height = newHeight;
+                Height = newHeight;
                 AddToMargin(0, 0, 0, -difference.Y);
             }
         }
@@ -231,5 +240,10 @@ public class ResizableBorder : UserControl // For direct content this needs to d
 
         this.Margin = margin;
     }
-}
 
+    protected bool IsInConstrains(double newWidth, double newHeight)
+    {
+        return !(newWidth < MinWidth) && !(newWidth > MaxWidth) && !(newHeight < MinHeight) && !(newHeight > MaxHeight);
+    }
+
+}
