@@ -1,7 +1,12 @@
 # WPF_ResizableBorder
 
+## Update
+Don't use this! While it may seem to be a simple task to make a border resize by mouse it is not trivial in wpf. Using a gridsplitter is the better alternative.
+
+## Problems
+
 ## What it is
-A border that is resizable by mouse for wpf. 
+An attempt at making border that is resizable by mouse for wpf. 
 
 ## How to use
 Add the files [ResizableBorder.cs](https://github.com/GlebLava/WPF_ResizableBorder/blob/main/ResizableBorder/ResizableBorder.cs) and [ResizableBorderStyle.xaml](https://github.com/GlebLava/WPF_ResizableBorder/blob/main/ResizableBorder/ResizableBorderStyle.xaml) to your project (typically inside a components folder).
